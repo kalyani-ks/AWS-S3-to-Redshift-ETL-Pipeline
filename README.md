@@ -1,2 +1,2 @@
-# aws-etl-pipeline
-Automated serverless ETL pipeline built on Aws.In this project transformation of CSV data ingested into S3 is done ,using  Aws Lamda to trigger Aws Glue Workflow containing Crawlers and Spark ETL jobs.
+# Aws-S3-to-Redshif-Etl-pipeline
+Automated serverless ETL pipeline built on AWS.In this project, the transformation of CSV data ingested into S3 is performed using  AWS Lambda to trigger AWS Glue Workflow containing Crawlers and Spark ETL jobs.
