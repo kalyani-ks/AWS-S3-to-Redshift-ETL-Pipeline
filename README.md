@@ -35,7 +35,7 @@ The pipeline leverages several AWS services orchestrated into a seamless workflo
 * **Amazon Redshift:** Data warehouse for final analytical data.
 * **Amazon SNS:** Notification service for operational alerts.
 * **AWS IAM:** For managing permissions between services.
-* **Amazon CloudWatch:**For managing Logs
+* **Amazon CloudWatch:** For managing Logs
 
 ## Prerequisites
 
