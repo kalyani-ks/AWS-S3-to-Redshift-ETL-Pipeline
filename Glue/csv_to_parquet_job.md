@@ -221,3 +221,79 @@ job.commit()
 logger.info("Glue Job 1 committed successfully.")
 
 ```
+## IAM Role
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "S3BucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::sales-data-etl-project-bucket",
+                "arn:aws:s3:::sales-data-etl-project-bucket/*"
+            ]
+        },
+        {
+            "Sid": "GlueDBandTableAccess",
+            "Effect": "Allow",
+            "Action": [
+                "glue:GetDatabase",
+                "glue:GetTable"
+            ],
+            "Resource": [
+                "arn:aws:glue:ap-south-1:183295412439:database/db-01",
+                "arn:aws:glue:ap-south-1:183295412439:table/db-01/data-csvinput"
+            ]
+        },
+
+        {
+            "Sid": "S3GlueAssestsBucketAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::aws-glue-assets-183295412439-ap-south-1",
+                "arn:aws:s3:::aws-glue-assets-183295412439-ap-south-1/*"
+            ]
+        },
+        {
+            "Sid": "CloudWatchAccess",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:ap-south-1:183295412439:log-group:/aws/glue/jobs/*"
+            ]
+        }
+    ]
+}
+
+```
+Trust relationship
+```json
+"Condition": {
+                "ArnEquals": { 
+                    "aws:SourceArn": [
+                         ,
+                         "arn:aws:glue:ap-south-1:183295412439:job/csv_to_parquet_job"
+                    ]
+
+                },
+                "StringsEquals": {
+                    "aws:SourceAccount": "183295412439"
+                }
+
+           }
+```
