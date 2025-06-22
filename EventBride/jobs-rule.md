@@ -1,18 +1,18 @@
 ## Event Pattern for jobs_rule
 These rules are designed for jobs to handle Glue Job State Changes, which are published in an SNS topic.
 
-**job01_rule**
+**job-01-rule**
 ```json
 {
   "source": ["aws.glue"],
   "detail-type": ["Glue Job State Change"],
   "detail": {
     "state": ["SUCCEEDED", "FAILED"],
-    "jobName": ["job01ks"]
+    "jobName": ["csv-to-parquet-job"]
   }
 }
 ```
-**IAM role for job01_rule**
+**IAM role for job-01-rule**
 ```json
 {
     "Version": "2012-10-17",
@@ -23,7 +23,7 @@ These rules are designed for jobs to handle Glue Job State Changes, which are pu
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
+                "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
             ]
         }
     ]
@@ -48,7 +48,7 @@ Trust Relationship
                     "aws:SourceAccount": "183295412439"
                 },
                 "ArnEquals": {
-                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/job01_rule"
+                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/job-01-rule"
                 }
 
            }
@@ -57,7 +57,7 @@ Trust Relationship
 }
 ```
 
-## Event Pattern for job02_rule
+## Event Pattern for job-02-rule
 ```json
 {
   "source": ["aws.glue"],
@@ -69,7 +69,7 @@ Trust Relationship
 }
 ```
 
-**IAM role for job01_rule**
+**IAM role for job-01-rule**
 ```json
 {
     "Version": "2012-10-17",
@@ -80,7 +80,7 @@ Trust Relationship
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
+                "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
             ]
         }
     ]
@@ -105,7 +105,7 @@ Trust Relationship
                     "aws:SourceAccount": "183295412439"
                 },
                 "ArnEquals": {
-                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/job02_rule"
+                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/job-02-rule"
                 }
 
            }
@@ -115,7 +115,7 @@ Trust Relationship
 ```
 
 * While creating both rules, select `input transformer` in the configure target input
-* Configure `input transformer` with following,
+* Configure `input transformer` with following:
   
 **Input_path**
   
