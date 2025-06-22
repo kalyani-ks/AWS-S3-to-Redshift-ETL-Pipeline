@@ -1,7 +1,7 @@
 ## sales-data-workgroup
 We will create a workgroup(`sales-data-workgroup`) and a namespace (`sales-data-namespace`).
 
-*Attach the following IAM Role  with the  workgroup*
+*Attach the following IAM Role  to the  workgroup*
 
 ```json
 {
@@ -16,8 +16,8 @@ We will create a workgroup(`sales-data-workgroup`) and a namespace (`sales-data-
                 "s3:DeleteObject"
             ],
             "Resource": [
-                "arn:aws:s3:::sales-data-etl-project-bucket",
-                "arn:aws:s3:::sales-data-etl-project-bucket/*"
+                "arn:aws:s3:::sales-data-etl-project",
+                "arn:aws:s3:::sales-data-etl-project/*"
             ]
         },
         {
