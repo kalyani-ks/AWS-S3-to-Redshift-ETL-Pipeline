@@ -1,5 +1,5 @@
-## csv_to_parquet_job
-This glue etl job read the csv data and transform it into parquet format.
+## csv-to-parquet-job
+This glue ETL job reads the CSV data and transforms it into Parquet format.
 
 ```python
 
@@ -50,7 +50,7 @@ GLUE_CATALOG_DATABASE = "db-01"
 GLUE_CATALOG_TABLE_NAME = "input"
 
 # Target S3 path for processed Parquet files
-TARGET_S3_PATH = "s3://sales-data-etl-project-bucket/output/processed-sales-file/"
+TARGET_S3_PATH = "s3://sales-data-etl-project/output/processed-sales-file/"
 
 # Date format expected in the input CSV columns
 # IMPORTANT: Adjust this format to match your actual CSV date strings!
@@ -282,14 +282,25 @@ logger.info("Glue Job 1 committed successfully.")
 }
 
 ```
-Trust relationship
-```json
 
-"Condition": {
+
+Trust Relationship
+```json
+ {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "glue.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole",
+
+            "Condition": {
                 "ArnEquals": { 
                     "aws:SourceArn": [
                          ,
-                         "arn:aws:glue:ap-south-1:183295412439:job/csv_to_parquet_job"
+                         "arn:aws:glue:ap-south-1:183295412439:job/csv-to-parquet-job"
                     ]
 
                 },
@@ -298,4 +309,8 @@ Trust relationship
                 }
 
            }
+        }
+
+    ]
+}
 ```
