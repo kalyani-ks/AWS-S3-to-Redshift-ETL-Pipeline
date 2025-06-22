@@ -1,4 +1,4 @@
-## redshift_loader_job
+## redshift-loader-job
  This ETL glue job Loads Parquet data into Redshift.
  ```python
 
@@ -74,7 +74,7 @@ job.commit()
 logger.info("Glue Job 2 committed successfully.")
 
 ```
-## IAM ROLE for Glue Job
+## IAM Role for Glue Job
 ```json
 
 {
@@ -192,7 +192,7 @@ Trust relationship
 ```
 
 ## Glue Connection for Redshift
-For this job we need to create a Glue Connection for Redshift
+For this job, we need to create a Glue Connection for Redshift.
 
 ### Prerequisites
 
@@ -204,13 +204,14 @@ For this job we need to create a Glue Connection for Redshift
  * STS Endpoint
 
 2. **Security Group:**
- * Inbound rule for Redshift and a self-referencing rule
-3.**IAM Role**
+ * Inbound rule for Redshift and a self-referencing inbound rule
+   
+3. **IAM Role**
  * We'll use the same IAM role that we're using for `redshift-loader-job`.
 
 ### Connection creation
 * Select Amazon Redshift as the Data Source.
-* Select your Redshift Cluster, Database,provide credentials and IAM role.
-* Finally review and create.
+* Select your Redshift Cluster, Database, provide credentials and IAM role.
+* Finally, review and create.
 * After successful creation, test your connection.
 
