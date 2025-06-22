@@ -24,7 +24,7 @@ These rules are designed for crawlers to handle crawler state changes, which are
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:OrderNotifiction"
+                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
             ]
         }
     ]
@@ -80,7 +80,7 @@ Trust Relationship
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:OrderNotifiction"
+                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
             ]
         }
     ]
@@ -111,5 +111,31 @@ Trust relationship
            }
         }
     ]
+}
+```
+
+* While  creating both rules select input transformer in  the target input.
+* Configure  `input transformer` with the following,
+  **Input path**
+```json
+{
+  "Message": "$.detail.message",
+  "compeletion": "$.detail.completionDate",
+  "crawlerName": "$.detail.crawlerName",
+  "status": "$.detail.state",
+  "warningMessage": "$.detail.warningMessage"
+}
+```
+**Template**
+```json
+{
+  "Crawler Notification":
+  {
+    "Crawler-Name":"<crawlerName>",
+    "Status":"<status>",
+    "Warning":"<warningMessage>",
+    "Message":"<Message>",
+    "Completion":"<compeletion>"
+  }
 }
 ```
