@@ -9,14 +9,14 @@ This project implements a robust and automated Extract, Transform, Load (ETL) pi
 
 The pipeline leverages several AWS services orchestrated into a seamless workflow:
 
-1.  **S3 Event Trigger:** An S3 bucket (`sales-data-etl-project-bucket`) is configured to emit an event via EventBridge whenever a new CSV file is uploaded to its `input/` prefix.
-2.  **AWS Lambda Activation:** This S3 event triggers an AWS Lambda function (`start_workflow_function`).
-3.  **Glue Workflow Initiation:** The Lambda function initiates an AWS Glue Workflow (`SalesData_Workflow`).
+1.  **S3 Event Trigger:** An S3 bucket (`sales-data-etl-project`) is configured to emit an event via EventBridge whenever a new CSV file is uploaded to its `input/` prefix.
+2.  **AWS Lambda Activation:** This S3 event triggers an AWS Lambda function (`start-workflow-function`).
+3.  **Glue Workflow Initiation:** The Lambda function initiates an AWS Glue Workflow (`sales-data-Workflow`).
 4.  **Glue Workflow Steps:**
-    * **Crawler 1 (Input CSV):** A Glue Crawler (`csv_to_parquet_job`) crawls the `input/` folder of the S3 bucket to discover the schema of the newly added CSV file.
-    * **Glue Job 1 (CSV to Parquet):** A Glue ETL Job (`csv`) reads the CSV data, performs validation (e.g., checks if it's indeed a CSV), selects specific columns, and transforms the data into Parquet format. The processed data is then saved into an `output/` folder of the same S3 bucket (`sales-data-etl-project-bucket`).
-    * **Crawler 2 (Output Parquet):** Another Glue Crawler (`parquet_data_reader`) crawls the `output/` folder to infer the schema of the newly generated Parquet files.
-    * **Glue Job 2 (Parquet to Redshift):** A second Glue ETL Job (`redshift_loader_job`) reads the Parquet data from the `output/` folder and loads it into a specified table in your Amazon Redshift cluster (`sales_data_workgroup`).
+    * **Crawler 1 (Input CSV):** A Glue Crawler (`csv-data-reader`) crawls the `input/` folder of the S3 bucket to discover the schema of the newly added CSV file.
+    * **Glue Job 1 (CSV to Parquet):** A Glue ETL Job (`csv-to-parquet-job`) reads the CSV data, checks Null Values,selects specific columns, and transforms the data into Parquet format. The processed data is then saved into an `output/` folder of the same S3 bucket (`sales-data-etl-project`).
+    * **Crawler 2 (Output Parquet):** Another Glue Crawler (`parquet-data-reader`) crawls the `output/` folder to infer the schema of the newly generated Parquet files.
+    * **Glue Job 2 (Parquet to Redshift):** A second Glue ETL Job (`redshift-loader-job`) reads the Parquet data from the `output/` folder and loads it into a specified table in your Amazon Redshift cluster (`sales-data-workgroup`).
 5.  **SNS Notifications:** Amazon SNS is integrated to provide notifications for the Lambda function execution status, as well as the completion and failure states of both Glue Crawlers and Glue Jobs within the workflow.
 
 ### Architecture Diagram
@@ -47,10 +47,10 @@ Before deploying this project, ensure you have the following:
 ## Setup and Deployment
 
 1.  **Create S3 Buckets:**
-    * Project Bucket Name: 'sales-data-etl-project-bucket'
-    * Input Bucket: `sales-data-etl-project-bucket/input/ ` 
-    * Output Bucket: `sales-data-etl-project-bucket/output/` 
-    * Glue Scripts Bucket: `aws-glue-asset/scripts/` 
+    * Project Bucket Name: 'sales-data-etl-project'
+    * Input Bucket: `sales-data-etl-project/input/ ` 
+    * Output Bucket: `sales-data-etl-project/output/` 
+    * Glue Scripts Bucket: `aws-glue-assets/scripts/` 
 2.  **Create IAM Roles:**
     * Create IAM Role for Lambda ( Glue and CloudWatch permissions).
     * Create IAM Role for Crawlers(with S3 read/write, Glue permissions,CloudWatch permissions).
@@ -59,41 +59,41 @@ Before deploying this project, ensure you have the following:
     * Create IAM Role for Redshift:(with  s3 read/write,KMS permissions).
     * create IAM Role for EventBridge Rules (with Lambda and SNS permissions).
 3.  **Configure Lambda Function:** 
-    * Create Lambda function (`start_workflow_function`).
-    * Link it to the S3 eventBridge Rule triggerlamdaFunctionRule (Input Bucket `input/` prefix).
+    * Create Lambda function (`start-workflow-function`).
+    * Link it to the S3 eventBridge Rule `start-lambda-rule` (Input Bucket `input/` prefix).
     * Set runtime, handler, and assign Lambda IAM Role.
 
 4.  **Create Glue Crawlers:**
     * **Input CSV Crawler:**
-    * Create Crawler (`csv_data_reader`). 
-    * DataSource:`s3://sales-data-etl-project-bucket/input/`.Assign Crawler  IAM Role(`Role_for_crawler`).
+    * Create Crawler (`csv-data-reader`). 
+    * DataSource:`s3://sales-data-etl-project/input/`.Assign Crawler  IAM Role(`Role_for_crawler`).
     * Output and Scheduling :Target DataBase (`db_01`) and On demand scheduling.
     * **Output Parquet Crawler:** 
-    * Create Crawler (`parquet_data_reader`).
-    * Data Source : `s3://sales-data-etl-project-bucket/output/`. Assign Crawler IAM Role(Role_for_crawler).
+    * Create Crawler (`parquet-data-reader`).
+    * Data Source : `s3://sales-data-etl-project/output/`. Assign Crawler IAM Role(Role_for_crawler).
     * Output and Scheduling :Target DataBase (`db_01`)
 5.  **Create Glue Jobs:**
     * **CSV to Parquet Job:**
-    * Create job :(`csv_to_parquet_job`).Assign Glue IAM Role. Configure arguments for input/output paths.
+    * Create job :(`csv-to-parquet-job`).Assign Glue IAM Role. Configure arguments for input/output paths.
     * **Parquet to Redshift Job:**
-    * Create job :(`redshift_loader_job`).Assign Glue IAM Role. Configure arguments for Redshift connection, table name.
+    * Create job :(`redshift-loader-job`).Assign Glue IAM Role. Configure arguments for Redshift connection, table name.
 6.  **Create Glue Workflow:**
-    * Define a workflow (`SalesData_workflow`) that orchestrates the crawlers and jobs in the correct sequence.
+    * Define a workflow (`sales-data-workflow`) that orchestrates the crawlers and jobs in the correct sequence.
     * Include events/triggers between steps (e.g., Crawler 1 finishes -> Job 1 starts).
 7.  **Configure SNS Notifications:**
     * Create SNS topics for Lambda status, Glue  crawlers and jobs success/failure.
     * Configure Lambda, Glue jobs, and crawlers to publish to these SNS topics.
 8.  **Create EventBridge Rules:**
-    * create EventBridge Rule: (`triggerLamdaRule,crawler01_rule,job01_rule,crawler02_rule,job02_rule`).With appropriate pattern matching and respective IAM role.
+    * create EventBridge Rule: (`start-lambda-rule,crawler-01-rule,job-01-rule,crawler-02-rule,job-02-rule`).With appropriate pattern matching and respective IAM role.
 9. **Set up Redshift:**
     * Ensure your Redshift cluster is running and accessible from Glue via Glue Connection(`SalesDataRedshift_connection`).
-    * Create the target table (`sales_data_table`)in Redshift that the `redshift_loader_job` will load data into.
+    * Create the target table (`sales_data_table`)in Redshift that the `redshift-loader-job` will load data into.
 
 ## Usage
 
 1.  **Prepare a CSV File:** Ensure your CSV file has the expected columns.
 2.  **Upload to S3:** Upload your CSV file to the S3 input bucket's `input/` prefix:
-    `s3://sales-data-etl-project-bucket/input/SampleSalesData.csv`
+    `s3://sales-data-etl-project/input/SampleSalesData.csv`
 3.  **Monitor Progress:**
     * Check AWS CloudWatch Logs for your Lambda function.
     * Monitor the Glue Workflow execution in the AWS Glue console.
