@@ -1,6 +1,6 @@
 ## start-workflow-rule
 
-This EventBride rule will invoke  Lamda function when a new object is added to the bucket.
+This EventBride rule will invoke  Lambda function when a new object is added to the bucket.
 
 
  **Event Pattern**
@@ -51,3 +51,5 @@ Trust Relationship
     ]
 }
 ```
+
+*While creating this rule,select `matched events`  in configure target input
