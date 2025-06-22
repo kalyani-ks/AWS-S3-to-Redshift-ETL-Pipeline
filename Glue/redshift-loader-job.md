@@ -1,5 +1,5 @@
 ## redshift_loader_job
- This etl glue job Loads Parquet data into Redshift.
+ This ETL glue job Loads Parquet data into Redshift.
  ```python
 
 import sys
@@ -42,7 +42,7 @@ REDSHIFT_TABLE_NAME = "sales_data_table" # Your target table in Redshift
 
 # This is the S3 path Redshift will use for temporary staging during COPY operations.
 # The IAM role associated with your REDSHIFT WORKGROUP (from Step 1) must have R/W access here.
-REDSHIFT_TEMP_DIR = "s3://sales-data-etl-project-bucket/redshift-temp/"
+REDSHIFT_TEMP_DIR = "s3://sales-data-etl-project/redshift-temp/"
 
 logger.info(f"Reading Parquet data from Glue Data Catalog: {GLUE_DATABASE_NAME}.{GLUE_PARQUET_TABLE_NAME}")
 # Read Parquet Data from Glue Data Catalog
@@ -74,8 +74,8 @@ job.commit()
 logger.info("Glue Job 2 committed successfully.")
 
 ```
-## IAM ROLE 
-```
+## IAM ROLE for Glue Job
+```json
 
 {
     "Version": "2012-10-17",
@@ -161,12 +161,22 @@ logger.info("Glue Job 2 committed successfully.")
 
 Trust relationship
 
-```
-"Condition": {
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "glue.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole",
+
+            "Condition": {
                 "ArnEquals": { 
                     "aws:SourceArn": [
                          ,
-                         "arn:aws:glue:ap-south-1:183295412439:job/redshift_loader_job"
+                         "arn:aws:glue:ap-south-1:183295412439:job/redshift-loader-job"
                     ]
 
                 },
@@ -175,7 +185,10 @@ Trust relationship
                 }
 
            }
+        }
 
+    ]
+}
 ```
 
 ## Glue Connection for Redshift
@@ -193,7 +206,7 @@ For this job we need to create a Glue Connection for Redshift
 2. **Security Group:**
  * Inbound rule for Redshift and a self-referencing rule
 3.**IAM Role**
- * We'll use the same IAM role that we're using for `redshift_loader_job`.
+ * We'll use the same IAM role that we're using for `redshift-loader-job`.
 
 ### Connection creation
 * Select Amazon Redshift as the Data Source.
