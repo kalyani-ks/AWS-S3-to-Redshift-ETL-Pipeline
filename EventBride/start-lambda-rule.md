@@ -1,4 +1,4 @@
-## start-workflow-rule
+## start-lambda-rule
 
 This EventBride rule will invoke  Lambda function when a new object is added to the bucket.
 
@@ -10,7 +10,7 @@ This EventBride rule will invoke  Lambda function when a new object is added to 
   "detail-type": ["Object Created"],
   "detail": {
     "bucket": {
-      "name": ["sales-data-etl-project-bucket"]
+      "name": ["sales-data-etl-project"]
     }
   }
 }
@@ -28,7 +28,7 @@ This EventBride rule will invoke  Lambda function when a new object is added to 
                 "lambda:InvokeFunction"
             ],
             "Resource": [
-                "arn:aws:lambda:ap-south-1:183295412439:function:start_workflow_function"
+                "arn:aws:lambda:ap-south-1:183295412439:function:start-workflow-function"
             ]
         }
     ]
@@ -36,7 +36,6 @@ This EventBride rule will invoke  Lambda function when a new object is added to 
 ```
 
 Trust Relationship
-
 ```json
 {
     "Version": "2012-10-17",
@@ -46,10 +45,20 @@ Trust Relationship
             "Principal": {
                 "Service": "events.amazonaws.com"
             },
-            "Action": "sts:AssumeRole"
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                
+                "StringsEquals": {
+                    "aws:SourceAccount": "183295412439"
+                },
+                "ArnEquals": {
+                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/start-lambda-rule"
+                }
+
+           }
         }
     ]
 }
 ```
 
-*While creating this rule,select `matched events`  in configure target input
+*While creating this rule, select `matched events`  in the configure target input
