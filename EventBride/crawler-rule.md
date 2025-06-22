@@ -9,7 +9,7 @@ These rules are designed for crawlers to handle crawler state changes, which are
   "detail-type": ["Glue Crawler State Change"],
   "detail": {
     "state": ["Succeeded", "Failed"],
-    "crawlerName": ["csv_data_reader"]
+    "crawlerName": ["csv-data-reader"]
   }
 }
 ```
