@@ -1,7 +1,7 @@
-## csv_data_reader_crawler
-This crawler is created to crawl the input folder of bucket `sales-data-etl-project-bucket/input/` and  discover the schema of the newly added CSV file, and create/update  a table in the Glue Data Catalogue
-## parquet_data_reader_crawler
-This crawler is created to crawl the folder `sales-data-etl-project-bucket/output/`  and  discover the schema of the newly added CSV file, and create/update  a table in the Glue Data Catalogue
+## csv-data-reader crawler
+This crawler is created to crawl the input folder of bucket `sales-data-etl-project/input/` and  discover the schema of the newly added CSV file, and create/update  a table in the Glue Data Catalogue
+## parquet-data-reader crawler
+This crawler is created to crawl the folder `sales-data-etl-project/output/`  and  discover the schema of the newly added CSV file, and create/update  a table in the Glue Data Catalogue
 ## IAM ROLE 
 We are using the common IAM role `role_for_crawler` for both crawlers
 ```json
@@ -15,8 +15,8 @@ We are using the common IAM role `role_for_crawler` for both crawlers
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::sales-data-etl-project-bucket",
-                "arn:aws:s3:::sales-data-etl-project-bucket/*"
+                "arn:aws:s3:::sales-data-etl-project",
+                "arn:aws:s3:::sales-data-etl-project/*"
             ]
         },
         {
@@ -76,8 +76,8 @@ Trust relationship
            "Condition": {
                  "ArnEquals": {
                        "aws:SourceArn": [
-                               "arn:aws:glue:ap-south-1:183295412439:crawler/csv_data_reader",
-                               "arn:aws:glue:ap-south-1:183295412439:crawler/parquet_data_reader"
+                               "arn:aws:glue:ap-south-1:183295412439:crawler/csv-data-reader",
+                               "arn:aws:glue:ap-south-1:183295412439:crawler/parquet-data-reader"
 
                        ]
                  }
