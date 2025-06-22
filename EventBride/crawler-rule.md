@@ -1,19 +1,19 @@
-## crawler_rule
+## crawler-rule
 
 These rules are designed for crawlers to handle crawler state changes, which are published in an SNS topic.
 
-**crawler01_rule**
+**crawler-01-rule**
 ```json
 {
   "source": ["aws.glue"],
   "detail-type": ["Glue Crawler State Change"],
   "detail": {
     "state": ["Succeeded", "Failed"],
-    "crawlerName": ["csv_data_read"]
+    "crawlerName": ["csv_data_reader"]
   }
 }
 ```
-**IAM role for crwaler01_rule**
+**IAM role for crwaler-01-rule**
 ```json
 {
     "Version": "2012-10-17",
@@ -24,7 +24,7 @@ These rules are designed for crawlers to handle crawler state changes, which are
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
+                "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
             ]
         }
     ]
@@ -48,7 +48,7 @@ Trust Relationship
                     "aws:SourceAccount": "183295412439"
                 },
                 "ArnEquals": {
-                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/crawler01_rule"
+                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/crawler-01-rule"
                 }
 
            }
@@ -57,7 +57,7 @@ Trust Relationship
 }
 ```
 
-### Crawler02_rule
+### Crawler-02-rule
 **Event Pattern**
 ```json
 {
@@ -65,11 +65,11 @@ Trust Relationship
   "detail-type": ["Glue Crawler State Change"],
   "detail": {
     "state": ["Succeeded", "Failed"],
-    "crawlerName": ["parquet_data_reader"]
+    "crawlerName": ["parquet-data-reader"]
   }
 }
 ```
-**IAM role for crwaler02_rule**
+**IAM role for crwaler-02-rule**
 ```json
 {
     "Version": "2012-10-17",
@@ -80,7 +80,7 @@ Trust Relationship
                 "sns:Publish"
             ],
             "Resource": [
-                "arn:aws:sns:ap-south-1:183295412439:Etl-Notifiction"
+                "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
             ]
         }
     ]
@@ -105,7 +105,7 @@ Trust relationship
                     "aws:SourceAccount": "183295412439"
                 },
                 "ArnEquals": {
-                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/crawler02_rule"
+                    "aws:SourceArn": "arn:aws:events:ap-south-1:183295412439:rule/crawler-02-rule"
                 }
 
            }
@@ -115,7 +115,7 @@ Trust relationship
 ```
 
 * While  creating both rules select input transformer in  the target input.
-* Configure  `input transformer` with the following,
+* Configure  `input transformer` with the following:
   **Input path**
 ```json
 {
