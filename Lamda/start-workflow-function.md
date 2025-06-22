@@ -1,4 +1,4 @@
-## Start workflow function
+## Start-workflow-unction
  This Lambda function receives an event via event bridge, then performs some checks and starts the Glue workflow.
 
  ```python
