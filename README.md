@@ -21,7 +21,7 @@ The pipeline leverages several AWS services orchestrated into a seamless workflo
 
 ### Architecture Diagram
 
-![Architecture Diagram](docs/sales-data-etl-flowchart.png)
+![Architecture Diagram](files/sales-data-etl-flowchart.png)
 
 ## AWS Services Used
 
@@ -57,7 +57,7 @@ Before deploying this project, ensure you have the following:
     * Create IAM Role for job 1:(with s3 read/write,CloudWatch and specific glue permissions).
     * Create IAM Role for job 2 :(with s3 read/write ,CloudWatch,SecretManager,KMS,VPC and specific glue permissions).
     * Create IAM Role for Redshift:(with  s3 read/write,KMS permissions).
-    * create IAM Role for EventBridge Rules (with lamda and SNS permissions).
+    * create IAM Role for EventBridge Rules (with Lambda and SNS permissions).
 3.  **Configure Lambda Function:** 
     * Create Lambda function (`start_workflow_function`).
     * Link it to the S3 eventBridge Rule triggerlamdaFunctionRule (Input Bucket `input/` prefix).
@@ -65,7 +65,7 @@ Before deploying this project, ensure you have the following:
 
 4.  **Create Glue Crawlers:**
     * **Input CSV Crawler:**
-    * Create Crawler (`CSV_Data_Reader`). 
+    * Create Crawler (`csv_data_reader`). 
     * DataSource:`s3://sales-data-etl-project-bucket/input/`.Assign Crawler  IAM Role(`Role_for_crawler`).
     * Output and Scheduling :Target DataBase (`db_01`) and On demand scheduling.
     * **Output Parquet Crawler:** 
