@@ -14,7 +14,7 @@ The pipeline leverages several AWS services orchestrated into a seamless workflo
 3.  **Glue Workflow Initiation:** The Lambda function initiates an AWS Glue Workflow (`sales-data-Workflow`).
 4.  **Glue Workflow Steps:**
     * **Crawler 1 (Input CSV):** A Glue Crawler (`csv-data-reader`) crawls the `input/` folder of the S3 bucket to discover the schema of the newly added CSV file.
-    * **Glue Job 1 (CSV to Parquet):** A Glue ETL Job (`csv-to-parquet-job`) reads the CSV data, checks Null Values,selects specific columns, and transforms the data into Parquet format. The processed data is then saved into an `output/` folder of the same S3 bucket (`sales-data-etl-project`).
+    * **Glue Job 1 (CSV to Parquet):** A Glue ETL Job (`csv-to-parquet-job`) reads the CSV data, checks Null Values, selects specific columns, and transforms the data into Parquet format. The processed data is then saved into an `output/` folder of the same S3 bucket (`sales-data-etl-project`).
     * **Crawler 2 (Output Parquet):** Another Glue Crawler (`parquet-data-reader`) crawls the `output/` folder to infer the schema of the newly generated Parquet files.
     * **Glue Job 2 (Parquet to Redshift):** A second Glue ETL Job (`redshift-loader-job`) reads the Parquet data from the `output/` folder and loads it into a specified table in your Amazon Redshift cluster (`sales-data-workgroup`).
 5.  **SNS Notifications:** Amazon SNS is integrated to provide notifications for the Lambda function execution status, as well as the completion and failure states of both Glue Crawlers and Glue Jobs within the workflow.
@@ -67,11 +67,11 @@ Before deploying this project, ensure you have the following:
     * **Input CSV Crawler:**
     * Create Crawler (`csv-data-reader`). 
     * DataSource:`s3://sales-data-etl-project/input/`.Assign Crawler  IAM Role(`Role_for_crawler`).
-    * Output and Scheduling :Target DataBase (`db_01`) and On demand scheduling.
+    * Output and Scheduling :Target DataBase (`db-01`) and On demand scheduling.
     * **Output Parquet Crawler:** 
     * Create Crawler (`parquet-data-reader`).
     * Data Source : `s3://sales-data-etl-project/output/`. Assign Crawler IAM Role(Role_for_crawler).
-    * Output and Scheduling :Target DataBase (`db_01`)
+    * Output and Scheduling :Target DataBase (`db-01`)
 5.  **Create Glue Jobs:**
     * **CSV to Parquet Job:**
     * Create job :(`csv-to-parquet-job`).Assign Glue IAM Role. Configure arguments for input/output paths.
