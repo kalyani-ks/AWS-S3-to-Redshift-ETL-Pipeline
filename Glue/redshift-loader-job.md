@@ -205,7 +205,7 @@ For this job, we need to create a Glue Connection for Redshift.
 
 2. **Security Group:**
  * Inbound rule for Redshift and a self-referencing inbound rule
-   
+
 3. **IAM Role**
  * We'll use the same IAM role that we're using for `redshift-loader-job`.
 
