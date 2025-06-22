@@ -1,5 +1,5 @@
 ## Start_workflow_function
- This Lamda function receives event via event bridge then do some checks and starts glue workflow.
+ This Lambda function receives an event via event bridge, then performs some checks and starts the Glue workflow.
 
  ```python
 
@@ -17,10 +17,8 @@ glue_client = boto3.client('glue', region_name='ap-south-1')
 sns_client = boto3.client('sns', region_name='ap-south-1') # Initialize SNS client
 
 # --- Configuration ---
-GLUE_WORKFLOW_NAME = "SalesData_Workflow" # IMPORTANT: Replace with your actual Glue Workflow name
-# IMPORTANT: Replace with your actual SNS Topic ARN for Lambda notifications
-# You can use the same topic as Glue Workflow alerts, or a new one.
-SNS_TOPIC_ARN = "arn:aws:sns:ap-south-1:183295412439:OrderNotifiction"
+GLUE_WORKFLOW_NAME = "sales-data-workflow" 
+SNS_TOPIC_ARN = "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
 
 def publish_sns_message(subject, message):
     """
@@ -71,9 +69,8 @@ def lambda_handler(event, context):
     if not object_key.startswith('input/') or not object_key.endswith('.csv'):
         info_message = f"Skipping file: {object_key}. Not a valid CSV in the input folder."
         logger.info(info_message)
-        # You might not want an SNS notification for a "skipped" file, 
-        # but uncomment if desired:
-        # publish_sns_message("Lambda Trigger INFO - File Skipped", info_message) 
+ 
+        #publish_sns_message("Lambda Trigger INFO - File Skipped", info_message) 
         return {
             'statusCode': 200,
             'body': json.dumps(info_message)
@@ -145,12 +142,12 @@ def lambda_handler(event, context):
             "Sid": "snsPublish",
             "Effect": "Allow",
             "Action": "sns:Publish",
-            "Resource": "arn:aws:sns:ap-south-1:183295412439:OrderNotifiction"
+            "Resource": "arn:aws:sns:ap-south-1:183295412439:sales-data-topic"
         },
          {
             "Effect": "Allow",
             "Action": "glue:StartWorkflowRun",
-            "Resource": "arn:aws:glue:ap-south-1:183295412439:workflow/SalesData_Workflow"
+            "Resource": "arn:aws:glue:ap-south-1:183295412439:workflow/sales-data-workflow"
         }
     ]
 }
@@ -172,7 +169,7 @@ Trust Relationship
                     "aws:SourceAccount": "183295412439"
                 },
                 "ArnLike": {
-                    "aws:SourceArn": "arn:aws:lambda:ap-south-1:183295412439:function:start_workflow_function"
+                    "aws:SourceArn": "arn:aws:lambda:ap-south-1:183295412439:function:start-workflow-function"
                 }
 
            }
